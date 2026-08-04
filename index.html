@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cartinhas 💌 — Cartas personalizadas para quem você ama</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Parisienne&family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Caveat:wght@400;700&family=Pacifico&family=Amatic+SC:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg1:#1b1030; --bg2:#33134a;
+    --ink:#fdf6ff; --muted:#b9a5cf;
+    --panel:#241638; --panel2:#2c1b45;
+    --accent:#ff6fb0; --accent2:#ffb86b;
+    --ok:#3ecf8e; --ok2:#a7f3d0;
+  }
+  *{box-sizing:border-box; margin:0; padding:0}
+  body{
+    font-family:'Playfair Display', Georgia, serif;
+    background:radial-gradient(1200px 800px at 80% -10%, #5a2a7a55, transparent 60%),
+               radial-gradient(900px 700px at 0% 110%, #e7548033, transparent 60%),
+               linear-gradient(160deg, var(--bg1), var(--bg2));
+    background-attachment:fixed;
+    color:var(--ink);
+    min-height:100vh;
+  }
+  .hidden{display:none !important}
+
+  /* ============ HEADER (editor) ============ */
+  header.top{
+    display:flex; align-items:center; gap:14px;
+    padding:14px 22px; position:sticky; top:0; z-index:30;
+    background:rgba(27,16,48,.75); backdrop-filter:blur(8px);
+    border-bottom:1px solid #ffffff14;
+  }
+  header.top .logo{font-family:'Pacifico',cursive; font-size:24px; color:#fff}
+  header.top .logo span{color:var(--accent)}
+  header.top .spacer{flex:1}
+  .btn{
+    cursor:pointer; border:0; border-radius:12px; padding:10px 18px;
+    font-family:'Playfair Display',serif; font-weight:600; font-size:15px;
+    transition:transform .12s ease, box-shadow .12s ease, filter .12s ease;
+    display:inline-flex; align-items:center; gap:8px;
+  }
+  .btn:hover{transform:translateY(-2px)}
+  .btn:active{transform:translateY(0) scale(.97)}
+  .btn.primary{
+    background:linear-gradient(135deg,#ff6fb0,#ff8e6e);
+    color:#3d0f2a; box-shadow:0 6px 18px #ff6fb055;
+  }
+  .btn.ghost{background:#ffffff12; color:var(--ink); border:1px solid #ffffff22}
+  .btn.small{padding:7px 12px; font-size:13px}
+
+  /* ============ LAYOUT ============ */
+  .layout{display:grid; grid-template-columns:380px 1fr; gap:20px; padding:22px; max-width:1500px; margin:0 auto}
+
+  /* ============ PAINEL ============ */
+  aside.panel{
+    background:linear-gradient(180deg,var(--panel),var(--panel2));
+    border:1px solid #ffffff14; border-radius:18px;
+    padding:18px; display:flex; flex-direction:column; gap:18px;
+    align-self:start; max-height:calc(100vh - 90px); overflow:auto; position:sticky; top:84px;
+  }
+  .group{border:1px solid #ffffff10; border-radius:14px; padding:14px; background:#ffffff08}
+  .group h3{
+    font-size:12px; letter-spacing:2px; text-transform:uppercase;
+    color:var(--accent2); margin-bottom:12px; display:flex; align-items:center; gap:8px;
+  }
+  .group h3 .ico{font-size:15px}
+  label{display:block; font-size:13px; color:var(--muted); margin:10px 0 5px}
+  input[type=text], textarea, select{
+    width:100%; background:#140b28; color:#fff; border:1px solid #ffffff1e;
+    border-radius:10px; padding:11px 13px; font-family:inherit; font-size:15px; outline:none;
+    transition:border .15s;
+  }
+  input[type=text]:focus, textarea:focus, select:focus{border-color:var(--accent)}
+  textarea{min-height:130px; resize:vertical; line-height:1.55}
+  select option{background:#241638}
+  .chips{display:flex; flex-wrap:wrap; gap:8px}
+  .chip{
+    cursor:pointer; padding:8px 13px; border-radius:999px; font-size:14px;
+    background:#ffffff0d; border:2px solid transparent; transition:all .15s; color:var(--ink);
+    display:inline-flex; align-items:center; gap:7px;
+  }
+  .chip:hover{background:#ffffff1c}
+  .chip.on{background:var(--accent); border-color:#ffd1e6; color:#3d0f2a; font-weight:700}
+  .chip .dot{width:11px; height:11px; border-radius:50%; display:inline-block; box-shadow:0 0 0 2px #ffffff55}
+
+  .group .mini{
+    margin-left:auto; cursor:pointer; border:0; background:#ffffff14; color:var(--muted);
+    border-radius:8px; padding:5px 11px; font-size:11px; transition:all .15s;
+  }
+  .group .mini:hover{background:#ffffff26; color:#fff}
+  .group h3{display:flex; align-items:center; gap:8px}
+
+  /* paleta de adesivos */
+  .stickers{display:grid; grid-template-columns:repeat(8,1fr); gap:6px}
+  .stickers button{
+    cursor:pointer; font-size:24px; padding:6px 0; border-radius:10px;
+    background:#ffffff0c; border:1px solid transparent; transition:all .15s; line-height:1;
+  }
+  .stickers button:hover{background:#ffffff22; transform:scale(1.15)}
+
+  .hint{font-size:12px; color:var(--muted); margin-top:8px; line-height:1.5}
+
+  /* ============ PALCO / CARTÃO ============ */
+  main.stage{
+    display:flex; flex-direction:column; align-items:center; justify-content:flex-start; gap:14px;
+  }
+  .stage-top{display:flex; gap:10px; align-items:center}
+  .card-wrap{position:relative; width:100%; max-width:540px; margin:0 auto}
+  .card{
+    position:relative; width:100%; aspect-ratio:4/5.6;
+    border-radius:16px; box-shadow:0 30px 60px -18px #00000099;
+    padding:9%; display:flex; flex-direction:column;
+    transition:background 1s ease;
+    overflow:hidden;
+  }
+  .card .inner{position:relative; z-index:2; display:flex; flex-direction:column; height:100%; flex:1; min-height:0}
+  .card .l-head{text-align:center}
+  .card .para{
+    font-family:'Playfair Display',serif; letter-spacing:4px; text-transform:uppercase;
+    font-size:11px; opacity:.7; margin-bottom:6px;
+  }
+  .card .name{
+    font-size:clamp(30px, 6vw, 52px); line-height:1.08; padding-bottom:8px; word-break:break-word;
+  }
+  .card .name.placeholder{opacity:.35}
+  .card .divider{
+    height:2px; width:90px; margin:4px auto 0;
+    background:repeating-linear-gradient(90deg, currentColor 0 10px, transparent 10px 18px);
+    opacity:.5;
+  }
+  .card .l-body{
+    flex:1; margin-top:18px; overflow:auto;
+    font-size:clamp(15px, 2.4vw, 20px); line-height:1.75; white-space:pre-wrap;
+    word-break:break-word; text-align:justify;
+  }
+  .card .l-body.placeholder{opacity:.35}
+  .card .l-foot{text-align:right; margin-top:14px; font-size:clamp(14px,2vw,17px); line-height:1.5}
+  .card .de-name{font-size:clamp(18px,3vw,26px); font-weight:700}
+  .card .watermark{
+    position:absolute; font-size:clamp(120px,20vw,200px); opacity:.07; z-index:1;
+    top:50%; left:50%; transform:translate(-50%,-50%); pointer-events:none;
+  }
+  .card .stick{
+    position:absolute; cursor:grab; user-select:none; font-size:40px; z-index:5;
+    text-shadow:0 3px 8px #00000055; line-height:1;
+  }
+  .card .stick:active{cursor:grabbing}
+  .card .stick .del{
+    position:absolute; top:-8px; right:-8px; width:20px; height:20px; border-radius:50%;
+    background:#c0392b; color:#fff; font-size:12px; line-height:20px; text-align:center;
+    cursor:pointer; display:none; text-shadow:none; z-index:6;
+  }
+  .card .stick:hover .del{display:block}
+  .card.dragging{cursor:grabbing}
+
+  /* ============ MODAL COMPARTILHAR ============ */
+  .overlay{
+    position:fixed; inset:0; background:#0b0616d9; backdrop-filter:blur(6px);
+    display:flex; align-items:center; justify-content:center; z-index:100; padding:20px;
+  }
+  .modal{
+    background:linear-gradient(180deg,#2b1a4a,#201235);
+    border:1px solid #ffffff1c; border-radius:20px; padding:26px; width:100%; max-width:520px;
+    box-shadow:0 40px 80px -20px #000; max-height:90vh; overflow:auto;
+  }
+  .modal h2{font-family:'Pacifico',cursive; font-weight:400; font-size:26px; margin-bottom:6px}
+  .modal p{color:var(--muted); font-size:14px; margin-bottom:16px}
+  .link-row{display:flex; gap:8px; margin-bottom:14px}
+  .link-row input{flex:1; background:#140b28; border:1px solid #ffffff1e; color:#ffe; border-radius:10px; padding:12px; font-size:13px}
+  .preview-link{
+    display:block; text-align:center; padding:12px; margin-bottom:14px;
+    border-radius:12px; background:linear-gradient(135deg,#ff6fb0,#ff8e6e);
+    color:#3d0f2a; font-weight:700; text-decoration:none; font-size:15px;
+    transition:transform .12s ease, box-shadow .12s ease;
+    box-shadow:0 6px 18px #ff6fb044;
+  }
+  .preview-link:hover{transform:translateY(-2px); box-shadow:0 10px 24px #ff6fb066}
+  .preview-link:active{transform:translateY(0) scale(.98)}
+  .notice{font-size:12.5px; line-height:1.6; color:#ffd79a; background:#3a2a10; border:1px solid #ffb84d44; padding:10px 12px; border-radius:10px; margin-bottom:14px}
+  .share-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-top:6px}
+  .share-btn{
+    cursor:pointer; border:0; border-radius:12px; padding:12px 8px; text-align:center;
+    color:#fff; font-family:'Playfair Display',serif; font-weight:600; font-size:13px; text-decoration:none;
+    transition:transform .12s;
+  }
+  .share-btn:hover{transform:translateY(-3px)}
+  .share-btn .i{display:block; font-size:22px; margin-bottom:4px}
+  .sb-wa{background:#25d366}
+  .sb-tg{background:#229ed9}
+  .sb-tw{background:#1da1f2}
+  .sb-fb{background:#1877f2}
+  .sb-em{background:#ea4335}
+  .sb-cp{background:#7c5cff}
+  .toast{
+    position:fixed; left:50%; bottom:26px; transform:translateX(-50%);
+    background:#101020ee; color:#fff; padding:12px 22px; border-radius:12px;
+    font-size:14px; z-index:200; box-shadow:0 10px 30px #0006;
+    transition:opacity .4s, transform .4s; opacity:0; pointer-events:none;
+  }
+  .toast.show{opacity:1; transform:translateX(-50%) translateY(-6px)}
+
+  /* ============ VISUALIZADOR ============ */
+  #viewer{min-height:100vh; display:flex; flex-direction:column; align-items:center; padding:30px 18px; gap:22px}
+  #viewer .v-card{max-width:620px; width:100%}
+  .env-open-wrap{animation:pop .7s ease both}
+  @keyframes pop{from{transform:scale(.6); opacity:0} to{transform:scale(1); opacity:1}}
+  .viewer-tools{display:flex; gap:12px; flex-wrap:wrap; justify-content:center}
+  .from-me{margin-top:18px; color:var(--muted); font-size:13px; text-align:center}
+  .from-me a{color:var(--accent2); cursor:pointer; text-decoration:underline}
+
+  /* ============ ENVELOPE ============ */
+  .envelope{position:relative; width:min(520px,92vw); aspect-ratio:3/4; margin:20px auto 0}
+  .envelope .env-card{
+    position:absolute; inset:0; border-radius:14px; transform-origin:center bottom;
+    animation:rise .9s .5s ease both;
+  }
+  @keyframes rise{from{transform:translateY(40%) scale(.92); opacity:0} to{transform:translateY(0) scale(1); opacity:1}}
+  .envelope .env-body{
+    position:absolute; inset:8% 4% 0; background:linear-gradient(180deg,#f7e8d4,#ecd6b8);
+    border-radius:10px 10px 0 0; box-shadow:0 -6px 20px #0003;
+    animation:envOut .8s 2.4s ease forwards;
+  }
+  .envelope .env-flap{
+    position:absolute; top:-1px; left:0; right:0; height:55%;
+    clip-path:polygon(0 0,100% 0,50% 100%);
+    background:linear-gradient(180deg,#f0dcc0,#e2c8a4);
+    border-radius:10px 10px 0 0;
+    transform-origin:top; animation:openFlap 1s 1.2s ease both, envOut .8s 2.7s ease forwards;
+  }
+  @keyframes openFlap{from{transform:rotateX(0)} to{transform:rotateX(180deg)}}
+  @keyframes envOut{to{opacity:0}}
+  .envelope .env-stamp{
+    position:absolute; top:12%; right:6%; width:52px; height:64px; background:#ff6fb0;
+    border:3px dashed #fff; border-radius:6px; opacity:.9; font-size:26px; line-height:58px; text-align:center;
+    animation:envOut .8s 2.4s ease forwards;
+  }
+  .envelope .env-label{
+    position:absolute; bottom:10%; left:50%; transform:translateX(-50%);
+    font-family:'Parisienne',cursive; font-size:26px; color:#7c4a1e; text-align:center; width:70%;
+    word-break:break-word; animation:envOut .8s 2.4s ease forwards;
+  }
+
+  /* ============ CARTÃO QUE ABRE EM 3D ============ */
+  .scene{perspective:1500px; position:absolute; inset:0}
+  .open-card{position:absolute; inset:0; transform-style:preserve-3d}
+  .cover{
+    position:absolute; inset:0; z-index:3; border-radius:14px; cursor:pointer;
+    transform-origin:left center; backface-visibility:hidden;
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:12px;
+    text-align:center; padding:24px; color:#fff;
+    transition:transform 1.2s cubic-bezier(.22,.75,.28,1), z-index 0s .2s;
+    box-shadow:0 24px 55px -22px #000a;
+  }
+  .open-card.open .cover{transform:rotateY(-172deg); z-index:1; transition:transform 1.2s cubic-bezier(.22,.75,.28,1), z-index 0s}
+  .open-card.open .cover .cover-hint{opacity:0; transition:opacity .2s}
+  .cover-emoji{font-size:clamp(58px,15vw,100px); line-height:1; filter:drop-shadow(0 10px 18px #0005); animation:bob 2.6s ease-in-out infinite}
+  @keyframes bob{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-12px) rotate(2deg)}}
+  .cover-para{letter-spacing:5px; text-transform:uppercase; font-size:clamp(11px,2.5vw,14px); opacity:.95}
+  .cover-name{font-size:clamp(30px,7vw,54px); line-height:1.1; word-break:break-word; font-weight:700; text-shadow:0 4px 14px #00000040}
+  .cover-name:empty{display:none}
+  .cover-hint{margin-top:16px; font-size:clamp(12px,2.6vw,14px); background:#ffffff2b; border:1px solid #ffffff4d; padding:9px 20px; border-radius:999px; transition:opacity .2s}
+  .cover .cover-stick{position:absolute; font-size:clamp(26px,5.5vw,44px); opacity:.95; pointer-events:none; filter:drop-shadow(0 3px 6px #0004)}
+  .inner-card{position:absolute; inset:0; aspect-ratio:auto; height:100%; width:100%}
+
+  /* impressão */
+  @media print{
+    body{background:#fff !important; color:#111}
+    .no-print{display:none !important}
+    .cover{display:none !important}
+    #viewer .scene, #viewer .open-card, #vCard{position:static !important; height:auto !important; width:100% !important; transform:none !important}
+    #vCard{min-height:90vh}
+    #editor .layout{display:block; padding:0}
+    aside.panel{display:none}
+    .card{box-shadow:none; aspect-ratio:auto; min-height:90vh}
+  }
+  @media (max-width:900px){
+    .layout{grid-template-columns:1fr; padding:14px}
+    aside.panel{position:static; max-height:none; order:2}
+    main.stage{order:1}
+  }
+</style>
+</head>
+<body>
+
+<!-- ==================== EDITOR ==================== -->
+<div id="editor">
+  <header class="top no-print">
+    <div class="logo">Cartinhas<span>.</span></div>
+    <div class="spacer"></div>
+    <button class="btn ghost" onclick="novaCarta()">✨ Nova carta</button>
+    <button class="btn primary" onclick="compartilhar()">📤 Compartilhar</button>
+  </header>
+
+  <div class="layout">
+    <aside class="panel">
+      <div class="group">
+        <h3><span class="ico">💌</span> Para quem é a carta?</h3>
+        <label>Nome da pessoa</label>
+        <input type="text" id="inNome" placeholder="Digite o nome aqui..." oninput="atualizar()">
+        <label>De quem é?</label>
+        <input type="text" id="inDe" placeholder="Seu nome..." oninput="atualizar()">
+      </div>
+
+      <div class="group">
+        <h3><span class="ico">🎨</span> Tipo de carta</h3>
+        <div class="chips" id="chipsTema"></div>
+      </div>
+
+      <div class="group">
+        <h3><span class="ico">✍️</span> Fonte</h3>
+        <div class="chips" id="chipsFonte"></div>
+      </div>
+
+      <div class="group">
+        <h3><span class="ico">📝</span> Mensagem</h3>
+        <label>Escreva seu recado</label>
+        <textarea id="inMsg" placeholder="Escreva aqui uma mensagem especial para essa pessoa..." oninput="atualizar()"></textarea>
+      </div>
+
+      <div class="group">
+        <h3><span class="ico">🧸</span> Adesivos decorativos <button class="mini" id="btnPaleta" onclick="togglePaleta()">Todas</button></h3>
+        <div class="stickers" id="paleta"></div>
+        <p class="hint">Adesivos do tema <b id="paletaTema">Amor</b>. Clique para adicionar, arraste para posicionar, passe o mouse para remover.</p>
+      </div>
+    </aside>
+
+    <main class="stage">
+      <div class="stage-top no-print">
+        <button class="btn ghost small" onclick="novaCarta()">↺ Limpar</button>
+        <button class="btn ghost small" onclick="imprimir()">🖨️ Imprimir</button>
+        <button class="btn ghost small" onclick="baixarImagem()">🖼️ Baixar imagem</button>
+      </div>
+      <div class="card-wrap">
+        <div id="card" class="card">
+          <div class="inner">
+            <div class="l-head">
+              <div class="para" id="cardPara">Para</div>
+              <div class="name" id="cardName">Digite o nome aqui...</div>
+              <div class="divider"></div>
+            </div>
+            <div class="l-body" id="cardBody">Sua mensagem especial vai aparecer aqui. Escreva no painel ao lado e surpreenda essa pessoa! ✨</div>
+            <div class="l-foot">Com todo carinho,<br><span class="de-name" id="cardDe">Você</span></div>
+          </div>
+          <div class="watermark" id="cardMark">💌</div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- ==================== VISUALIZADOR ==================== -->
+<div id="viewer" class="hidden">
+  <div class="env-open-wrap v-card">
+    <div class="envelope no-print">
+      <div class="env-card">
+        <div class="scene">
+          <div class="open-card" id="openCard">
+            <div class="cover" id="cover" onclick="abrirCarta()">
+              <div class="cover-emoji" id="coverEmoji">💗</div>
+              <div class="cover-para" id="coverPara">Para</div>
+              <div class="cover-name" id="coverName">...</div>
+              <div class="cover-hint">Clique para abrir 💌</div>
+            </div>
+            <div id="vCard" class="card inner-card" style="aspect-ratio:auto; height:100%; width:100%">
+              <div class="inner">
+                <div class="l-head">
+                  <div class="para" id="vCardPara">Para</div>
+                  <div class="name" id="vCardName">...</div>
+                  <div class="divider"></div>
+                </div>
+                <div class="l-body" id="vCardBody"></div>
+                <div class="l-foot">Com todo carinho,<br><span class="de-name" id="vCardDe">...</span></div>
+              </div>
+              <div class="watermark" id="vCardMark">💌</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="env-body"></div>
+      <div class="env-flap"></div>
+      <div class="env-stamp">💖</div>
+      <div class="env-label" id="envLabel">Para ...</div>
+    </div>
+  </div>
+  <div class="viewer-tools no-print">
+    <button class="btn primary" onclick="abrirCarta()">💌 Abrir carta</button>
+    <button class="btn ghost" onclick="imprimir()">🖨️ Imprimir</button>
+    <button class="btn ghost" onclick="baixarImagem()">🖼️ Baixar imagem</button>
+    <button class="btn ghost" onclick="window.location.hash=''">✍️ Criar minha carta</button>
+  </div>
+  <div class="from-me no-print">
+    Recebeu essa carta? <a onclick="window.location.hash=''">Crie a sua também</a> e surpreenda alguém especial.
+  </div>
+</div>
+
+<!-- ==================== MODAL ==================== -->
+<div id="overlay" class="overlay hidden no-print">
+  <div class="modal">
+    <h2>Sua carta está pronta! 💌</h2>
+    <p>Copie o link abaixo e envie para a pessoa — ela verá a carta abrir como um presente.</p>
+    <div class="link-row">
+      <input type="text" id="shareLink" readonly onclick="this.select()">
+      <button class="btn primary small" onclick="copiar()">Copiar</button>
+    </div>
+    <a class="preview-link" id="previewLink" target="_blank" rel="noopener">🕵️ Abrir carta misteriosa</a>
+    <p class="notice" id="shareNotice">⚠️ Este link só funciona enquanto o arquivo estiver aberto <b>neste computador</b>. Para o amigo conseguir abrir, o site precisa estar publicado na internet (ex.: GitHub Pages ou Netlify).</p>
+    <p>Ou envie direto por:</p>
+    <div class="share-grid">
+      <a class="share-btn sb-wa" id="sbWa" target="_blank" rel="noopener"><span class="i">💬</span>WhatsApp</a>
+      <a class="share-btn sb-tg" id="sbTg" target="_blank" rel="noopener"><span class="i">✈️</span>Telegram</a>
+      <a class="share-btn sb-tw" id="sbTw" target="_blank" rel="noopener"><span class="i">🐦</span>Twitter / X</a>
+      <a class="share-btn sb-fb" id="sbFb" target="_blank" rel="noopener"><span class="i">📘</span>Facebook</a>
+      <a class="share-btn sb-em" id="sbEm" target="_blank"><span class="i">✉️</span>E-mail</a>
+      <a class="share-btn sb-cp" onclick="copiar()"><span class="i">📋</span>Copiar</a>
+    </div>
+    <div style="display:flex; justify-content:center; gap:10px; margin-top:18px">
+      <button class="btn primary" onclick="verCarta()">👀 Ver a carta aberta</button>
+      <button class="btn ghost" onclick="fecharModal()">Continuar editando</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast" class="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<script>
+/* ================= CONFIG ================= */
+const TEMAS = {
+  amor:        {label:'💗 Amor',        grad:'linear-gradient(150deg,#fff5f6,#ffd3e0)', color:'#c2185b', mark:'💗', para:'Para', cover:'linear-gradient(150deg,#ff6fb0,#d81b60)',
+               stickers:['❤️','💖','💕','💘','💝','💌','🌹','🥰','😘','🌺','💞','💋']},
+  amizade:     {label:'🤗 Amizade',     grad:'linear-gradient(150deg,#fffaf0,#ffe6b8)', color:'#c2740a', mark:'🤗', para:'Querido(a)', cover:'linear-gradient(150deg,#ffb84d,#f97316)',
+               stickers:['🤗','👯','🫶','🌟','✨','🍀','🌈','🤝','😄','🎈','🙌','🧑‍🤝‍🧑']},
+  aniversario: {label:'🎂 Aniversário', grad:'linear-gradient(150deg,#faf5ff,#e7d4ff)', color:'#6d28d9', mark:'🎉', para:'Para', cover:'linear-gradient(150deg,#a855f7,#6d28d9)',
+               stickers:['🎂','🎉','🎈','🎁','🎊','✨','🥳','🪅','💫','🎵','👑','🍰']},
+  saudade:     {label:'🌙 Saudades',    grad:'linear-gradient(150deg,#f0f9ff,#b9e4fb)', color:'#0369a1', mark:'🌙', para:'Minha saudade', cover:'linear-gradient(150deg,#38bdf8,#0369a1)',
+               stickers:['🌙','⭐','💫','🌷','🦋','📷','🌧️','🕯️','🤍','🌊','☁️','✉️']},
+  perdao:      {label:'🕊️ Perdão',     grad:'linear-gradient(150deg,#f0fdf4,#bbf0cd)', color:'#15803d', mark:'🕊️', para:'Querido(a)', cover:'linear-gradient(150deg,#4ade80,#15803d)',
+               stickers:['🕊️','🤍','🌿','🌱','☮️','💐','🙏','✨','🍃','💚','🫂','🌸']},
+  carinho:     {label:'🌼 Carinho',     grad:'linear-gradient(150deg,#fff7ed,#fdd3a8)', color:'#c2410c', mark:'🌼', para:'Querida(o)', cover:'linear-gradient(150deg,#fdba74,#ea580c)',
+               stickers:['🌼','🌷','☀️','🧸','🍓','🌻','🍬','💐','🍯','🐝','🌞','🫐']},
+};
+const FONTES = {
+  parisienne:{label:'Romântica',  family:"'Parisienne',cursive"},
+  dancing:   {label:'Dançante',   family:"'Dancing Script',cursive"},
+  playfair:  {label:'Elegante',   family:"'Playfair Display',serif"},
+  caveat:    {label:'Manuscrita', family:"'Caveat',cursive"},
+  pacifico:  {label:'Divertida',  family:"'Pacifico',cursive"},
+  amatic:    {label:'Desenho',    family:"'Amatic SC',cursive"},
+  georgia:   {label:'Clássica',   family:"Georgia,serif"},
+};
+const ADESIVOS = ['❤️','💖','💕','💘','💝','💌','🌹','🌸','🌺','🌷','🦋','🌈','⭐','🌟','✨','🎀','👑','🍀','🌙','☀️','🎂','🎉','🎈','🥰','😘','🕊️','💫','🧸','🌻','🍓','🍭','☔','🎁'];
+
+/* ================= ESTADO ================= */
+let state = { nome:'', de:'', tipo:'amor', fonte:'parisienne', msg:'', adesivos:[] };
+
+/* ================= INICIALIZAÇÃO ================= */
+window.addEventListener('DOMContentLoaded', () => {
+  montarChips();
+  montarPaleta();
+  if (location.hash && location.hash.length > 5) {
+    const s = lerHash();
+    if (s) { state = s; renderViewer(); }
+  } else {
+    atualizar();
+  }
+});
+
+function montarChips(){
+  const ct = document.getElementById('chipsTema');
+  Object.keys(TEMAS).forEach(k => {
+    const b = document.createElement('button');
+    b.className = 'chip'; b.dataset.k = k;
+    b.innerHTML = '<span class="dot" style="background:' + TEMAS[k].color + '"></span>' + TEMAS[k].label;
+    b.onclick = () => { state.tipo = k; montarPaleta(); atualizar(); };
+    ct.appendChild(b);
+  });
+  const cf = document.getElementById('chipsFonte');
+  Object.keys(FONTES).forEach(k => {
+    const b = document.createElement('button');
+    b.className = 'chip'; b.dataset.k = k; b.textContent = FONTES[k].label;
+    b.style.fontFamily = FONTES[k].family;
+    b.onclick = () => { state.fonte = k; atualizar(); };
+    cf.appendChild(b);
+  });
+}
+let paletaTudo = false;
+function montarPaleta(){
+  const p = document.getElementById('paleta');
+  p.innerHTML = '';
+  const tema = TEMAS[state.tipo];
+  const lista = paletaTudo ? ADESIVOS : tema.stickers;
+  lista.forEach(e => {
+    const b = document.createElement('button');
+    b.textContent = e; b.title = 'Adicionar adesivo';
+    b.onclick = () => { adicionarSticker(e); };
+    p.appendChild(b);
+  });
+  document.getElementById('btnPaleta').textContent = paletaTudo ? 'Só deste tema' : 'Todas';
+  document.getElementById('paletaTema').textContent = paletaTudo ? 'todas as categorias' : tema.label.replace(/^\S+\s*/, '');
+}
+function togglePaleta(){
+  paletaTudo = !paletaTudo;
+  montarPaleta();
+}
+
+/* ================= RENDER (pré-visualização) ================= */
+function atualizar(){
+  state.nome = document.getElementById('inNome').value.trim();
+  state.de   = document.getElementById('inDe').value.trim();
+  state.msg  = document.getElementById('inMsg').value;
+  renderCard('card');
+  // chips
+  document.querySelectorAll('#chipsTema .chip').forEach(c => c.classList.toggle('on', c.dataset.k === state.tipo));
+  document.querySelectorAll('#chipsFonte .chip').forEach(c => c.classList.toggle('on', c.dataset.k === state.fonte));
+}
+
+function renderCard(prefix){
+  const tema = TEMAS[state.tipo];
+  const font = FONTES[state.fonte];
+  const card = document.getElementById(prefix);
+  card.style.background = tema.grad;
+  card.style.color = tema.color;
+  card.style.fontFamily = font.family;
+
+  const elPara = document.getElementById(prefix + 'Para').textContent = tema.para;
+  const elName = document.getElementById(prefix + 'Name');
+  elName.textContent = state.nome || (prefix === 'card' ? 'Digite o nome aqui...' : '...');
+  elName.classList.toggle('placeholder', !state.nome);
+
+  const elBody = document.getElementById(prefix + 'Body');
+  elBody.textContent = state.msg || (prefix === 'card' ? 'Sua mensagem especial vai aparecer aqui. Escreva no painel ao lado e surpreenda essa pessoa! ✨' : '...');
+  elBody.classList.toggle('placeholder', !state.msg);
+
+  const elDe = document.getElementById(prefix + 'De');
+  elDe.textContent = state.de || (prefix === 'card' ? 'Você' : '...');
+
+  const elMark = document.getElementById(prefix + 'Mark');
+  elMark.textContent = tema.mark;
+
+  // adesivos
+  card.querySelectorAll('.stick').forEach(s => s.remove());
+  state.adesivos.forEach((a, i) => {
+    const d = document.createElement('div');
+    d.className = 'stick';
+    d.textContent = a.e;
+    d.style.left = a.x + '%';
+    d.style.top  = a.y + '%';
+    d.style.transform = `translate(-50%,-50%) rotate(${a.r}deg) scale(${a.s})`;
+    if (prefix === 'card') {
+      d.draggable = false;
+      const del = document.createElement('span');
+      del.className = 'del'; del.textContent = '✕';
+      del.addEventListener('pointerdown', e => e.stopPropagation());
+      del.addEventListener('mousedown', e => e.stopPropagation());
+      del.onclick = () => { state.adesivos.splice(i,1); renderCard('card'); };
+      d.appendChild(del);
+      // arrastar
+      d.addEventListener('pointerdown', ev => iniciarDrag(ev, a, d));
+      d.ondragstart = () => false;
+    }
+    card.appendChild(d);
+  });
+  if (prefix === 'vCard') { // ajustar nome do envelope
+    document.getElementById('envLabel').textContent = 'Para ' + (state.nome || 'você');
+  }
+}
+
+/* ---------- arrastar adesivo ---------- */
+let drag = null;
+function iniciarDrag(ev, a, el){
+  ev.preventDefault();
+  const card = el.parentElement;
+  const rect = card.getBoundingClientRect();
+  drag = { a, el, card, rect, moved:false };
+  el.setPointerCapture(ev.pointerId);
+  el.classList.add('dragging');
+}
+document.addEventListener('pointermove', ev => {
+  if (!drag) return;
+  const x = ((ev.clientX - drag.rect.left) / drag.rect.width) * 100;
+  const y = ((ev.clientY - drag.rect.top) / drag.rect.height) * 100;
+  drag.a.x = Math.max(0, Math.min(100, x));
+  drag.a.y = Math.max(0, Math.min(100, y));
+  drag.el.style.left = drag.a.x + '%';
+  drag.el.style.top  = drag.a.y + '%';
+  drag.moved = true;
+});
+document.addEventListener('pointerup', () => { if (drag) { drag.el.classList.remove('dragging'); drag = null; } });
+
+function adicionarSticker(e){
+  state.adesivos.push({ e, x: 50 + (Math.random()*20-10), y: 35 + (Math.random()*30), r: Math.random()*30-15, s: 0.9 + Math.random()*0.6 });
+  renderCard('card');
+}
+
+/* ================= COMPARTILHAR ================= */
+function comporDados(){
+  atualizar();
+  return {
+    nome: state.nome, de: state.de, tipo: state.tipo,
+    fonte: state.fonte, msg: state.msg, adesivos: state.adesivos
+  };
+}
+function codificar(s){
+  return btoa(unescape(encodeURIComponent(JSON.stringify(s)))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+}
+function decodificar(str){
+  try {
+    const b64 = str.replace(/-/g,'+').replace(/_/g,'/');
+    return JSON.parse(decodeURIComponent(escape(atob(b64))));
+  } catch(e){ return null; }
+}
+function montarLink(){
+  const atual = location.href.split('#')[0];
+  return atual + '#' + codificar(comporDados());
+}
+
+function compartilhar(){
+  const link = montarLink();
+  document.getElementById('shareLink').value = link;
+  document.getElementById('previewLink').href = link;
+  const msg = '💌 Abre essa cartinha pra você: ' + link;
+  const enc = encodeURIComponent(msg);
+  document.getElementById('sbWa').href = 'https://wa.me/?text=' + enc;
+  document.getElementById('sbTg').href = 'https://t.me/share/url?url=' + encodeURIComponent(link) + '&text=' + encodeURIComponent('💌 Uma cartinha pra você!');
+  document.getElementById('sbTw').href = 'https://twitter.com/intent/tweet?text=' + enc;
+  document.getElementById('sbFb').href = 'https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(link);
+  document.getElementById('sbEm').href = 'mailto:?subject=' + encodeURIComponent('Uma cartinha pra você 💌') + '&body=' + enc;
+  document.getElementById('overlay').classList.remove('hidden');
+}
+function fecharModal(){ document.getElementById('overlay').classList.add('hidden'); }
+function verCarta(){
+  const link = montarLink();
+  location.hash = link.split('#')[1];
+  abrirViewer();
+  fecharModal();
+}
+function copiar(){
+  const input = document.getElementById('shareLink');
+  input.select();
+  navigator.clipboard && navigator.clipboard.writeText(input.value);
+  mostrarToast('Link copiado! 📋 Envie para a pessoa.');
+}
+
+/* ================= VISUALIZADOR ================= */
+function lerHash(){
+  const str = location.hash.slice(1);
+  return str ? decodificar(str) : null;
+}
+function abrirViewer(){
+  document.getElementById('editor').classList.add('hidden');
+  document.getElementById('viewer').classList.remove('hidden');
+  renderViewer();
+}
+function renderViewer(){
+  document.title = 'Uma carta misteriosa para você 🕵️';
+  const tema = TEMAS[state.tipo];
+  const cover = document.getElementById('cover');
+  cover.style.background = tema.cover;
+  document.getElementById('coverEmoji').textContent = tema.mark;
+  document.getElementById('coverPara').textContent = 'Uma carta misteriosa';
+  document.getElementById('coverName').textContent = '';
+  document.getElementById('envLabel').textContent = 'Uma carta misteriosa para você 👀';
+  const hint = cover.querySelector('.cover-hint');
+  hint.textContent = 'Clique para revelar 🕵️';
+  cover.querySelectorAll('.cover-stick').forEach(s => s.remove());
+  const st = tema.stickers;
+  const spots = [
+    { l:'6%',  t:'12%', r:-16 },
+    { l:'86%', t:'16%', r:14  },
+    { l:'8%',  t:'74%', r:12  },
+    { l:'86%', t:'72%', r:-12 },
+    { l:'50%', t:'6%',  r:0   }
+  ];
+  spots.forEach((sp, i) => {
+    const d = document.createElement('span');
+    d.className = 'cover-stick';
+    d.textContent = st[i % st.length];
+    d.style.left = sp.l; d.style.top = sp.t;
+    d.style.transform = 'rotate(' + sp.r + 'deg)';
+    cover.appendChild(d);
+  });
+  renderCard('vCard');
+  const oc = document.getElementById('openCard');
+  oc.classList.remove('open');
+  clearTimeout(window._openT);
+  window._openT = setTimeout(abrirCarta, 3200);
+  document.getElementById('viewer').classList.remove('hidden');
+  document.getElementById('editor').classList.add('hidden');
+}
+function abrirCarta(){
+  clearTimeout(window._openT);
+  document.getElementById('openCard').classList.add('open');
+}
+function novaCarta(){
+  state = { nome:'', de:'', tipo:'amor', fonte:'parisienne', msg:'', adesivos:[] };
+  location.hash = '';
+  paletaTudo = false;
+  document.getElementById('inNome').value = '';
+  document.getElementById('inDe').value = '';
+  document.getElementById('inMsg').value = '';
+  document.getElementById('editor').classList.remove('hidden');
+  document.getElementById('viewer').classList.add('hidden');
+  document.getElementById('overlay').classList.add('hidden');
+  montarPaleta();
+  atualizar();
+}
+
+/* ================= UTILITÁRIOS ================= */
+function imprimir(){ window.print(); }
+function baixarImagem(){
+  const viewer = !document.getElementById('viewer').classList.contains('hidden');
+  const card = document.getElementById(viewer ? 'vCard' : 'card');
+  if (typeof html2canvas === 'undefined') { mostrarToast('Não foi possível gerar a imagem aqui.'); return; }
+  html2canvas(card, { scale: 2, backgroundColor: null }).then(c => {
+    const a = document.createElement('a');
+    a.download = 'cartinha-' + (state.nome || 'amor') + '.png';
+    a.href = c.toDataURL('image/png');
+    a.click();
+  }).catch(() => mostrarToast('Não foi possível gerar a imagem.'));
+}
+let toastTimer;
+function mostrarToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2600);
+}
+
+/* hashchange: navegando direto por link */
+window.addEventListener('hashchange', () => {
+  if (location.hash && location.hash.length > 5) {
+    const s = lerHash();
+    if (s) { state = s; abrirViewer(); }
+  }
+});
+</script>
+</body>
+</html>
