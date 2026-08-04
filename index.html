@@ -110,6 +110,64 @@
   }
   .stage-top{display:flex; gap:10px; align-items:center}
   .card-wrap{position:relative; width:100%; max-width:540px; margin:0 auto}
+  .card-wrap .card{box-shadow:0 30px 60px -18px #00000099}
+
+  /* ============ MENU DE TIPOS ============ */
+  #menu{
+    position:fixed; inset:0; z-index:50; overflow:auto;
+    background:radial-gradient(1000px 600px at 75% 0%, #ff6fb033, transparent 55%),
+               radial-gradient(800px 600px at 0% 100%, #38bdf833, transparent 55%),
+               linear-gradient(160deg,#241234,#150a24);
+    display:flex; align-items:center; justify-content:center; padding:30px 16px;
+    transition:opacity .45s ease, visibility .45s;
+  }
+  #menu.hide{opacity:0; visibility:hidden; pointer-events:none}
+  .menu-inner{width:100%; max-width:940px; text-align:center; opacity:0; transform:translateY(14px); transition:opacity .5s ease, transform .5s ease}
+  .menu-inner.anim{opacity:1; transform:none}
+  .menu-inner .m-title{font-family:'Pacifico',cursive; font-weight:400; font-size:clamp(28px,5vw,44px); margin-bottom:8px; color:#fff}
+  .menu-inner .m-title span{color:var(--accent)}
+  .menu-inner .m-sub{color:var(--muted); font-size:15px; margin-bottom:28px; line-height:1.5}
+  .menu-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:14px; perspective:1200px}
+  .menu-card{
+    position:relative; cursor:pointer; border:0; border-radius:16px; padding:24px 14px 18px;
+    color:#fff; text-align:center; overflow:hidden;
+    box-shadow:0 16px 34px -16px #000a; transition:transform .18s ease, box-shadow .18s ease;
+  }
+  .menu-card:hover{transform:translateY(-6px) scale(1.03); box-shadow:0 24px 46px -16px #000d}
+  .menu-card:active{transform:scale(.96)}
+  .menu-card .mc-emoji{font-size:clamp(42px,6.5vw,62px); display:block; margin-bottom:8px; filter:drop-shadow(0 6px 12px #0004); animation:mcBob 3s ease-in-out infinite}
+  @keyframes mcBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+  .menu-card .mc-label{font-family:'Playfair Display',serif; font-weight:700; font-size:clamp(17px,2.6vw,22px); margin-bottom:5px}
+  .menu-card .mc-desc{font-size:12.5px; opacity:.92; line-height:1.45; min-height:34px}
+  .menu-card .mc-go{display:inline-block; margin-top:12px; font-size:11.5px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; background:#ffffff2e; border:1px solid #ffffff55; padding:7px 16px; border-radius:999px; transition:background .15s}
+  .menu-card:hover .mc-go{background:#ffffff52}
+  .menu-inner.anim .menu-card:nth-child(1){animation:mSlideL .7s cubic-bezier(.2,.8,.3,1.15) both}
+  .menu-inner.anim .menu-card:nth-child(2){animation:mPop .7s cubic-bezier(.2,.8,.3,1.2) both}
+  .menu-inner.anim .menu-card:nth-child(3){animation:mSlideR .7s cubic-bezier(.2,.8,.3,1.15) both}
+  .menu-inner.anim .menu-card:nth-child(4){animation:mRise .7s cubic-bezier(.2,.8,.3,1.15) both}
+  .menu-inner.anim .menu-card:nth-child(5){animation:mFlip .75s cubic-bezier(.2,.8,.3,1.1) both}
+  .menu-inner.anim .menu-card:nth-child(6){animation:mSpin .7s cubic-bezier(.2,.8,.3,1.15) both}
+  @keyframes mSlideL{from{opacity:0; transform:translateX(-80px)} to{opacity:1; transform:none}}
+  @keyframes mSlideR{from{opacity:0; transform:translateX(80px)} to{opacity:1; transform:none}}
+  @keyframes mPop{0%{opacity:0; transform:scale(.35)} 70%{opacity:1; transform:scale(1.07)} 100%{opacity:1; transform:scale(1)}}
+  @keyframes mRise{from{opacity:0; transform:translateY(80px)} to{opacity:1; transform:none}}
+  @keyframes mFlip{from{opacity:0; transform:rotateY(-85deg)} to{opacity:1; transform:none}}
+  @keyframes mSpin{from{opacity:0; transform:rotate(-12deg) scale(.45)} to{opacity:1; transform:none}}
+  @media (max-width:700px){ .menu-grid{grid-template-columns:repeat(2,1fr)} }
+
+  /* ============ ENTRADA DA CARTA POR TIPO ============ */
+  .card-wrap.enter-amor .card{animation:cardAmor .95s cubic-bezier(.2,.8,.3,1.2) both}
+  @keyframes cardAmor{0%{opacity:0; transform:scale(.7) rotate(-5deg)} 55%{opacity:1; transform:scale(1.05) rotate(1.5deg)} 100%{transform:none}}
+  .card-wrap.enter-amizade .card{animation:cardAmizade .9s cubic-bezier(.2,.8,.3,1.15) both}
+  @keyframes cardAmizade{0%{opacity:0; transform:translateX(-100px) rotate(-6deg)} 60%{opacity:1; transform:translateX(10px) rotate(0)} 100%{transform:none}}
+  .card-wrap.enter-aniversario .card{animation:cardAniv 1s cubic-bezier(.2,.9,.3,1.3) both}
+  @keyframes cardAniv{0%{opacity:0; transform:scale(.3) rotate(16deg)} 55%{opacity:1; transform:scale(1.09) rotate(-3deg)} 100%{transform:none}}
+  .card-wrap.enter-saudade .card{animation:cardSaudade 1.15s ease both}
+  @keyframes cardSaudade{0%{opacity:0; transform:translateY(55px); filter:blur(2px)} 100%{opacity:1; transform:none; filter:none}}
+  .card-wrap.enter-perdao .card{animation:cardPerdao 1s ease both}
+  @keyframes cardPerdao{0%{opacity:0; filter:blur(8px)} 100%{opacity:1; filter:none}}
+  .card-wrap.enter-carinho .card{animation:cardCarinho .9s cubic-bezier(.2,.8,.3,1.15) both}
+  @keyframes cardCarinho{0%{opacity:0; transform:scale(.8)} 60%{opacity:1; transform:scale(1.04)} 100%{transform:none}}
   .card{
     position:relative; width:100%; aspect-ratio:4/5.6;
     border-radius:16px; box-shadow:0 30px 60px -18px #00000099;
@@ -295,6 +353,14 @@
     <button class="btn primary" onclick="compartilhar()">📤 Compartilhar</button>
   </header>
 
+  <div id="menu">
+    <div class="menu-inner">
+      <h1 class="m-title">Escolha o <span>tipo</span> da sua carta</h1>
+      <p class="m-sub">Cada tipo tem a sua cor, seus adesivos e uma animação de entrada. É só escolher e começar a escrever!</p>
+      <div class="menu-grid" id="menuGrid"></div>
+    </div>
+  </div>
+
   <div class="layout">
     <aside class="panel">
       <div class="group">
@@ -430,17 +496,17 @@
 <script>
 /* ================= CONFIG ================= */
 const TEMAS = {
-  amor:        {label:'💗 Amor',        grad:'linear-gradient(150deg,#fff5f6,#ffd3e0)', color:'#c2185b', mark:'💗', para:'Para', cover:'linear-gradient(150deg,#ff6fb0,#d81b60)',
+  amor:        {label:'💗 Amor',        grad:'linear-gradient(150deg,#fff5f6,#ffd3e0)', color:'#c2185b', mark:'💗', para:'Para', cover:'linear-gradient(150deg,#ff6fb0,#d81b60)', desc:'Coracões, rosas e todo o romantismo',
                stickers:['❤️','💖','💕','💘','💝','💌','🌹','🥰','😘','🌺','💞','💋']},
-  amizade:     {label:'🤗 Amizade',     grad:'linear-gradient(150deg,#fffaf0,#ffe6b8)', color:'#c2740a', mark:'🤗', para:'Querido(a)', cover:'linear-gradient(150deg,#ffb84d,#f97316)',
+  amizade:     {label:'🤗 Amizade',     grad:'linear-gradient(150deg,#fffaf0,#ffe6b8)', color:'#c2740a', mark:'🤗', para:'Querido(a)', cover:'linear-gradient(150deg,#ffb84d,#f97316)', desc:'Alegria e parceria de verdade',
                stickers:['🤗','👯','🫶','🌟','✨','🍀','🌈','🤝','😄','🎈','🙌','🧑‍🤝‍🧑']},
-  aniversario: {label:'🎂 Aniversário', grad:'linear-gradient(150deg,#faf5ff,#e7d4ff)', color:'#6d28d9', mark:'🎉', para:'Para', cover:'linear-gradient(150deg,#a855f7,#6d28d9)',
+  aniversario: {label:'🎂 Aniversário', grad:'linear-gradient(150deg,#faf5ff,#e7d4ff)', color:'#6d28d9', mark:'🎉', para:'Para', cover:'linear-gradient(150deg,#a855f7,#6d28d9)', desc:'Confete, bolo e muita festa',
                stickers:['🎂','🎉','🎈','🎁','🎊','✨','🥳','🪅','💫','🎵','👑','🍰']},
-  saudade:     {label:'🌙 Saudades',    grad:'linear-gradient(150deg,#f0f9ff,#b9e4fb)', color:'#0369a1', mark:'🌙', para:'Minha saudade', cover:'linear-gradient(150deg,#38bdf8,#0369a1)',
+  saudade:     {label:'🌙 Saudades',    grad:'linear-gradient(150deg,#f0f9ff,#b9e4fb)', color:'#0369a1', mark:'🌙', para:'Minha saudade', cover:'linear-gradient(150deg,#38bdf8,#0369a1)', desc:'Estrelas pra quem fica longe',
                stickers:['🌙','⭐','💫','🌷','🦋','📷','🌧️','🕯️','🤍','🌊','☁️','✉️']},
-  perdao:      {label:'🕊️ Perdão',     grad:'linear-gradient(150deg,#f0fdf4,#bbf0cd)', color:'#15803d', mark:'🕊️', para:'Querido(a)', cover:'linear-gradient(150deg,#4ade80,#15803d)',
+  perdao:      {label:'🕊️ Perdão',     grad:'linear-gradient(150deg,#f0fdf4,#bbf0cd)', color:'#15803d', mark:'🕊️', para:'Querido(a)', cover:'linear-gradient(150deg,#4ade80,#15803d)', desc:'Paz e renovação de coração',
                stickers:['🕊️','🤍','🌿','🌱','☮️','💐','🙏','✨','🍃','💚','🫂','🌸']},
-  carinho:     {label:'🌼 Carinho',     grad:'linear-gradient(150deg,#fff7ed,#fdd3a8)', color:'#c2410c', mark:'🌼', para:'Querida(o)', cover:'linear-gradient(150deg,#fdba74,#ea580c)',
+  carinho:     {label:'🌼 Carinho',     grad:'linear-gradient(150deg,#fff7ed,#fdd3a8)', color:'#c2410c', mark:'🌼', para:'Querida(o)', cover:'linear-gradient(150deg,#fdba74,#ea580c)', desc:'Afeto suave pra gente especial',
                stickers:['🌼','🌷','☀️','🧸','🍓','🌻','🍬','💐','🍯','🐝','🌞','🫐']},
 };
 const FONTES = {
@@ -460,14 +526,55 @@ let state = { nome:'', de:'', tipo:'amor', fonte:'parisienne', msg:'', adesivos:
 /* ================= INICIALIZAÇÃO ================= */
 window.addEventListener('DOMContentLoaded', () => {
   montarChips();
+  montarMenu();
   montarPaleta();
   if (location.hash && location.hash.length > 5) {
     const s = lerHash();
     if (s) { state = s; renderViewer(); }
   } else {
     atualizar();
+    showMenu();
   }
 });
+
+/* ================= MENU DE TIPOS ================= */
+function montarMenu(){
+  const grid = document.getElementById('menuGrid');
+  grid.innerHTML = '';
+  const keys = Object.keys(TEMAS);
+  keys.forEach((k, i) => {
+    const t = TEMAS[k];
+    const b = document.createElement('button');
+    b.className = 'menu-card';
+    b.style.background = t.cover;
+    b.style.animationDelay = (i * 0.09) + 's';
+    b.innerHTML = '<span class="mc-emoji">' + t.mark + '</span>' +
+                  '<div class="mc-label">' + t.label.replace(/^\S+\s*/, '') + '</div>' +
+                  '<div class="mc-desc">' + t.desc + '</div>' +
+                  '<span class="mc-go">Escolher ✨</span>';
+    b.onclick = () => escolherTema(k);
+    grid.appendChild(b);
+  });
+}
+function showMenu(){
+  const menu = document.getElementById('menu');
+  menu.classList.remove('hide');
+  const inner = document.querySelector('.menu-inner');
+  inner.classList.remove('anim');
+  void inner.offsetWidth;
+  inner.classList.add('anim');
+}
+function escolherTema(k){
+  state.tipo = k;
+  document.getElementById('menu').classList.add('hide');
+  montarPaleta();
+  atualizar();
+  const cw = document.querySelector('.card-wrap');
+  cw.classList.remove('enter-amor','enter-amizade','enter-aniversario','enter-saudade','enter-perdao','enter-carinho');
+  void cw.offsetWidth;
+  cw.classList.add('enter-' + k);
+  cw.style.setProperty('--tc', TEMAS[k].color);
+}
 
 function montarChips(){
   const ct = document.getElementById('chipsTema');
@@ -707,6 +814,7 @@ function novaCarta(){
   document.getElementById('overlay').classList.add('hidden');
   montarPaleta();
   atualizar();
+  showMenu();
 }
 
 /* ================= UTILITÁRIOS ================= */
