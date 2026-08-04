@@ -29,7 +29,7 @@
 
   /* ============ HEADER (editor) ============ */
   header.top{
-    display:flex; align-items:center; gap:14px;
+    display:flex; align-items:center; gap:14px; flex-wrap:wrap;
     padding:14px 22px; position:sticky; top:0; z-index:30;
     background:rgba(27,16,48,.75); backdrop-filter:blur(8px);
     border-bottom:1px solid #ffffff14;
@@ -349,6 +349,8 @@
   <header class="top no-print">
     <div class="logo">Cartinhas<span>.</span></div>
     <div class="spacer"></div>
+    <button class="btn ghost" onclick="abrirMinhas()">📂 Minhas cartas</button>
+    <button class="btn ghost" onclick="abrirSalvar()">💾 Salvar</button>
     <button class="btn ghost" onclick="novaCarta()">✨ Nova carta</button>
     <button class="btn primary" onclick="compartilhar()">📤 Compartilhar</button>
   </header>
