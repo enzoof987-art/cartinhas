@@ -51,6 +51,11 @@
   }
   .btn.ghost{background:#ffffff12; color:var(--ink); border:1px solid #ffffff22}
   .btn.small{padding:7px 12px; font-size:13px}
+  .btn.back-menu{
+    width:100%; justify-content:center; margin-bottom:4px;
+    background:#ffffff12; color:var(--ink); border:1px dashed #ffffff33; border-radius:12px;
+  }
+  .btn.back-menu:hover{background:#ffffff22; border-color:var(--accent2); color:#fff}
 
   /* ============ LAYOUT ============ */
   .layout{display:grid; grid-template-columns:380px 1fr; gap:20px; padding:22px; max-width:1500px; margin:0 auto}
@@ -365,17 +370,13 @@
 
   <div class="layout">
     <aside class="panel">
+      <button class="btn back-menu" onclick="voltarAoMenu()">← Voltar ao menu</button>
       <div class="group">
         <h3><span class="ico">💌</span> Para quem é a carta?</h3>
         <label>Nome da pessoa</label>
         <input type="text" id="inNome" placeholder="Digite o nome aqui..." oninput="atualizar()">
         <label>De quem é?</label>
         <input type="text" id="inDe" placeholder="Seu nome..." oninput="atualizar()">
-      </div>
-
-      <div class="group">
-        <h3><span class="ico">🎨</span> Tipo de carta</h3>
-        <div class="chips" id="chipsTema"></div>
       </div>
 
       <div class="group">
@@ -398,6 +399,7 @@
 
     <main class="stage">
       <div class="stage-top no-print">
+        <button class="btn ghost small" onclick="voltarAoMenu()">← Voltar</button>
         <button class="btn ghost small" onclick="novaCarta()">↺ Limpar</button>
         <button class="btn ghost small" onclick="imprimir()">🖨️ Imprimir</button>
         <button class="btn ghost small" onclick="baixarImagem()">🖼️ Baixar imagem</button>
@@ -566,6 +568,13 @@ function showMenu(){
   void inner.offsetWidth;
   inner.classList.add('anim');
 }
+function voltarAoMenu(){
+  document.getElementById('menu').classList.remove('hide');
+  const inner = document.querySelector('.menu-inner');
+  inner.classList.remove('anim');
+  void inner.offsetWidth;
+  inner.classList.add('anim');
+}
 function escolherTema(k){
   state.tipo = k;
   document.getElementById('menu').classList.add('hide');
@@ -579,14 +588,6 @@ function escolherTema(k){
 }
 
 function montarChips(){
-  const ct = document.getElementById('chipsTema');
-  Object.keys(TEMAS).forEach(k => {
-    const b = document.createElement('button');
-    b.className = 'chip'; b.dataset.k = k;
-    b.innerHTML = '<span class="dot" style="background:' + TEMAS[k].color + '"></span>' + TEMAS[k].label;
-    b.onclick = () => { state.tipo = k; montarPaleta(); atualizar(); };
-    ct.appendChild(b);
-  });
   const cf = document.getElementById('chipsFonte');
   Object.keys(FONTES).forEach(k => {
     const b = document.createElement('button');
@@ -623,7 +624,6 @@ function atualizar(){
   state.msg  = document.getElementById('inMsg').value;
   renderCard('card');
   // chips
-  document.querySelectorAll('#chipsTema .chip').forEach(c => c.classList.toggle('on', c.dataset.k === state.tipo));
   document.querySelectorAll('#chipsFonte .chip').forEach(c => c.classList.toggle('on', c.dataset.k === state.fonte));
 }
 
